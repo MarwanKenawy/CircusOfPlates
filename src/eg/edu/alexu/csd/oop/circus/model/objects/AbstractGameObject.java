@@ -17,6 +17,7 @@ public abstract class AbstractGameObject implements GameObject {
         this.y = y;
         this.width = width;
         this.height = height;
+        this.visible = true;
         this.spriteImages = spriteImages;
     }
 

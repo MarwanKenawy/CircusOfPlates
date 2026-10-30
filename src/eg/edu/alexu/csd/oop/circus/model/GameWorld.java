@@ -5,6 +5,7 @@ import java.util.List;
 
 import eg.edu.alexu.csd.oop.game.GameObject;
 import eg.edu.alexu.csd.oop.game.World;
+import eg.edu.alexu.csd.oop.circus.model.objects.TestObject;
 
 public class GameWorld implements World{
     private final int width; 
@@ -21,6 +22,8 @@ public class GameWorld implements World{
         constantObjects = new ArrayList<>();
         movableObjects = new ArrayList<>();
         controllableObjects = new ArrayList<>();
+
+        constantObjects.add(new TestObject(350, 250));
     }
 
     @Override 
