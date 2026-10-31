@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.circus.model;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,8 @@ import eg.edu.alexu.csd.oop.game.GameObject;
 import eg.edu.alexu.csd.oop.game.World;
 // import eg.edu.alexu.csd.oop.circus.model.objects.TestObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Clown;
+import eg.edu.alexu.csd.oop.circus.model.objects.FallingObject;
+import eg.edu.alexu.csd.oop.circus.model.objects.Plate;
 
 public class GameWorld implements World{
     private final int width; 
@@ -26,6 +29,7 @@ public class GameWorld implements World{
 
         // constantObjects.add(new TestObject(350, 250));
         controllableObjects.add(new Clown(width / 2 - 40, height - 120));
+        movableObjects.add(new Plate(width / 2 - 30, 0, Color.RED, 2));
     }
 
     @Override 
@@ -55,6 +59,11 @@ public class GameWorld implements World{
 
     @Override 
     public boolean refresh(){
+        for(GameObject object : movableObjects){
+            if(object instanceof FallingObject){
+                ((FallingObject)object).fall();
+            }
+        }
         return true;
     }
 
