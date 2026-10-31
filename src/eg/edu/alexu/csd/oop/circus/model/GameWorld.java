@@ -10,6 +10,7 @@ import eg.edu.alexu.csd.oop.game.World;
 import eg.edu.alexu.csd.oop.circus.model.objects.Clown;
 import eg.edu.alexu.csd.oop.circus.model.objects.FallingObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Plate;
+import eg.edu.alexu.csd.oop.circus.model.objects.Shape;
 
 public class GameWorld implements World{
     private final int width; 
@@ -18,6 +19,8 @@ public class GameWorld implements World{
     private final List<GameObject> constantObjects;
     private final List<GameObject> movableObjects;
     private final List<GameObject> controllableObjects;
+
+    private final Clown clown;
 
     public GameWorld(int width, int height){
         this.width = width;
@@ -28,7 +31,8 @@ public class GameWorld implements World{
         controllableObjects = new ArrayList<>();
 
         // constantObjects.add(new TestObject(350, 250));
-        controllableObjects.add(new Clown(width / 2 - 40, height - 120));
+        clown = new Clown(width / 2 - 40, height - 120);
+        controllableObjects.add(clown);
         movableObjects.add(new Plate(width / 2 - 30, 0, Color.RED, 2));
     }
 
@@ -64,6 +68,12 @@ public class GameWorld implements World{
             if(object instanceof FallingObject){
                 FallingObject fallingObject = (FallingObject)object;
                 fallingObject.fall();
+                if(fallingObject instanceof Shape && intersects(fallingObject, clown)){
+                    Shape shape = (Shape)fallingObject;
+                    catchShape(shape);
+                    movableObjects.remove(i);
+                    continue;
+                }
                 if(fallingObject.getY() > height){
                     movableObjects.remove(i);
                 }
@@ -85,5 +95,20 @@ public class GameWorld implements World{
     @Override 
     public int getControlSpeed(){
         return 10;
+    }
+
+    private boolean intersects(GameObject first, GameObject second){
+        return first.getX() < second.getX() + second.getWidth() && first.getX() + first.getWidth() > second.getX() && first.getY() < second.getY() + second.getHeight() && first.getY() + first.getHeight() > second.getY();
+    }
+
+    private void catchShape(Shape shape){
+        int clownCenter = clown.getX() + clown.getWidth() / 2;
+        int shapeCenter = shape.getX() + shape.getWidth() / 2;
+
+        if(shapeCenter < clownCenter){
+            clown.getLeftStack().push(shape);
+        }else{
+            clown.getRightStack().push(shape);
+        }
     }
 }
