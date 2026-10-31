@@ -8,8 +8,13 @@ public class Clown extends AbstractGameObject {
     private static final int CLOWN_WIDTH = 80;
     private static final int CLOWN_HEIGHT = 100;
 
+    private final ShapeStack leftStack;
+    private final ShapeStack rightStack;
+
     public Clown(int x, int y){
         super(x, y, CLOWN_WIDTH, CLOWN_HEIGHT, createSprite());
+        leftStack = new ShapeStack();
+        rightStack = new ShapeStack();
     }
 
     @Override 
@@ -37,5 +42,13 @@ public class Clown extends AbstractGameObject {
         g.dispose();
 
         return new BufferedImage[] {image};
+    }
+
+    public ShapeStack getLeftStack(){
+        return leftStack;
+    }
+
+    public ShapeStack getRightStack(){
+        return rightStack;
     }
 }
