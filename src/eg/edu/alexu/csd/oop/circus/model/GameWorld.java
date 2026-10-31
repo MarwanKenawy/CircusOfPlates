@@ -5,7 +5,7 @@ import java.util.List;
 
 import eg.edu.alexu.csd.oop.game.GameObject;
 import eg.edu.alexu.csd.oop.game.World;
-import eg.edu.alexu.csd.oop.circus.model.objects.TestObject;
+// import eg.edu.alexu.csd.oop.circus.model.objects.TestObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Clown;
 
 public class GameWorld implements World{
@@ -24,7 +24,7 @@ public class GameWorld implements World{
         movableObjects = new ArrayList<>();
         controllableObjects = new ArrayList<>();
 
-        constantObjects.add(new TestObject(350, 250));
+        // constantObjects.add(new TestObject(350, 250));
         controllableObjects.add(new Clown(width / 2 - 40, height - 120));
     }
 
