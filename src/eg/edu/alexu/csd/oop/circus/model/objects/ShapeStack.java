@@ -10,6 +10,10 @@ public class ShapeStack {
         shapes = new ArrayList<>();
     }
 
+    public Shape get(int index){
+        return shapes.get(index);
+    }
+
     public void push(Shape shape){
         shapes.add(shape);
     }

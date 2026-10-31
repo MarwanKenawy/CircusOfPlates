@@ -13,8 +13,11 @@ import eg.edu.alexu.csd.oop.circus.model.objects.Plate;
 import eg.edu.alexu.csd.oop.circus.model.objects.Shape;
 
 public class GameWorld implements World{
+    private static final int STACK_OFFSET = 10;
+
     private final int width; 
     private final int height;
+
     
     private final List<GameObject> constantObjects;
     private final List<GameObject> movableObjects;
@@ -63,6 +66,7 @@ public class GameWorld implements World{
 
     @Override 
     public boolean refresh(){
+        updateStackPositions();
         for(int i = movableObjects.size() - 1; i >= 0; i--){
             GameObject object = movableObjects.get(i);
             if(object instanceof FallingObject){
@@ -105,10 +109,40 @@ public class GameWorld implements World{
         int clownCenter = clown.getX() + clown.getWidth() / 2;
         int shapeCenter = shape.getX() + shape.getWidth() / 2;
 
-        if(shapeCenter < clownCenter){
+        boolean isLeftStack = shapeCenter < clownCenter;
+
+        if(isLeftStack){
             clown.getLeftStack().push(shape);
         }else{
             clown.getRightStack().push(shape);
+        }
+
+        positionShapeOnStack(shape, isLeftStack);
+        controllableObjects.add(shape);
+    }
+
+    private void positionShapeOnStack(Shape shape, boolean leftStack){
+        int stackSize;
+        if(leftStack){
+            stackSize = clown.getLeftStack().size();
+            shape.setX(clown.getX() - shape.getWidth() + STACK_OFFSET);
+        }else{
+            stackSize = clown.getRightStack().size();
+            shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
+        }
+        shape.setY(clown.getY() - (stackSize * shape.getHeight()));
+    }
+
+    private void updateStackPositions(){
+        for(int i = 0; i < clown.getLeftStack().size(); i++){
+            Shape shape = clown.getLeftStack().get(i);
+            shape.setX(clown.getX() - shape.getWidth() + STACK_OFFSET);
+            shape.setY(clown.getY() - ((i + 1) * shape.getHeight()));
+        }
+        for(int i = 0; i < clown.getRightStack().size(); i++){
+            Shape shape = clown.getRightStack().get(i);
+            shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
+            shape.setY(clown.getY() - ((i + 1) * shape.getHeight()));
         }
     }
 }
