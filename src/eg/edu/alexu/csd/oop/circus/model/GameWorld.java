@@ -59,9 +59,14 @@ public class GameWorld implements World{
 
     @Override 
     public boolean refresh(){
-        for(GameObject object : movableObjects){
+        for(int i = movableObjects.size() - 1; i >= 0; i--){
+            GameObject object = movableObjects.get(i);
             if(object instanceof FallingObject){
-                ((FallingObject)object).fall();
+                FallingObject fallingObject = (FallingObject)object;
+                fallingObject.fall();
+                if(fallingObject.getY() > height){
+                    movableObjects.remove(i);
+                }
             }
         }
         return true;
