@@ -6,6 +6,7 @@ import java.util.List;
 
 import eg.edu.alexu.csd.oop.game.GameObject;
 import eg.edu.alexu.csd.oop.game.World;
+import eg.edu.alexu.csd.oop.circus.factory.ShapeFactory;
 // import eg.edu.alexu.csd.oop.circus.model.objects.TestObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Clown;
 import eg.edu.alexu.csd.oop.circus.model.objects.FallingObject;
@@ -19,6 +20,7 @@ public class GameWorld implements World{
 
     private final int width; 
     private final int height;
+    private final ShapeFactory shapeFactory = new ShapeFactory();
     private int refreshCount = 0;
     private int score = 0;
 
@@ -159,7 +161,7 @@ public class GameWorld implements World{
         Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
         Color color = colors[(int)(Math.random() * colors.length)];
         int x = (int)(Math.random() * (width - 60));
-        movableObjects.add(new Plate(x, 0, color, 2));
+        movableObjects.add(shapeFactory.createPlate(x, 0, color, 2));
     }
 
     private void checkForMatch(boolean leftStack){
