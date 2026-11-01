@@ -15,7 +15,6 @@ import eg.edu.alexu.csd.oop.circus.model.objects.ShapeStack;
 
 public class GameWorld implements World{
     private static final int STACK_OFFSET = 10;
-    private static final int STACK_SPACING = 25;
     private static final int SPAWN_INTERVAL = 100;
 
     private final int width; 
@@ -133,27 +132,42 @@ public class GameWorld implements World{
     }
 
     private void positionShapeOnStack(Shape shape, boolean leftStack){
-        int stackSize;
         if(leftStack){
-            stackSize = clown.getLeftStack().size();
             shape.setX(clown.getX() - shape.getWidth() + STACK_OFFSET);
         }else{
-            stackSize = clown.getRightStack().size();
             shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
         }
-        shape.setY(clown.getY() - (stackSize * STACK_SPACING));
+        shape.setY(clown.getY() - shape.getHeight());
     }
 
     private void updateStackPositions(){
-        for(int i = 0; i < clown.getLeftStack().size(); i++){
-            Shape shape = clown.getLeftStack().get(i);
-            shape.setX(clown.getX() - shape.getWidth() + STACK_OFFSET);
-            shape.setY(clown.getY() - ((i + 1) * STACK_SPACING));
-        }
-        for(int i = 0; i < clown.getRightStack().size(); i++){
-            Shape shape = clown.getRightStack().get(i);
-            shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
-            shape.setY(clown.getY() - ((i + 1) * STACK_SPACING));
+        // for(int i = 0; i < clown.getLeftStack().size(); i++){
+        //     Shape shape = clown.getLeftStack().get(i);
+        //     shape.setX(clown.getX() - shape.getWidth() + STACK_OFFSET);
+        //     shape.setY(clown.getY() - ((i + 1) * STACK_SPACING));
+        // }
+        // for(int i = 0; i < clown.getRightStack().size(); i++){
+        //     Shape shape = clown.getRightStack().get(i);
+        //     shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
+        //     shape.setY(clown.getY() - ((i + 1) * STACK_SPACING));
+        // }
+        updateStack(clown.getLeftStack(), true);
+        updateStack(clown.getRightStack(), false);
+    }
+
+    private void updateStack(ShapeStack stack, boolean leftStack){
+        int currentY = clown.getY();
+        for(int i = 0; i < stack.size(); i++){
+            Shape shape = stack.get(i);
+            currentY -= shape.getHeight();
+
+            if(leftStack){
+                shape.setX(clown.getX() - shape.getWidth() + STACK_OFFSET);
+            }else{
+                shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
+            }
+
+            shape.setY(currentY);
         }
     }
 
