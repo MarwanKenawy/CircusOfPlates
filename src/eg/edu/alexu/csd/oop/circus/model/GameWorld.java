@@ -23,6 +23,7 @@ public class GameWorld implements World{
     private final ShapeFactory shapeFactory = new ShapeFactory();
     private int refreshCount = 0;
     private int score = 0;
+    private boolean gameOver = false;
 
     
     private final List<GameObject> constantObjects;
@@ -72,6 +73,9 @@ public class GameWorld implements World{
 
     @Override 
     public boolean refresh(){
+        if(gameOver){
+            return false;
+        }
         updateStackPositions();
         refreshCount++;
         if(refreshCount % SPAWN_INTERVAL == 0){
@@ -85,6 +89,10 @@ public class GameWorld implements World{
             if(object instanceof FallingObject){
                 FallingObject fallingObject = (FallingObject)object;
                 fallingObject.fall();
+                if(fallingObject instanceof Bomb && intersects(fallingObject, clown)){
+                    gameOver = true;
+                    return false;
+                }
                 if(fallingObject instanceof Shape && intersects(fallingObject, clown)){
                     Shape shape = (Shape)fallingObject;
                     catchShape(shape);
@@ -96,7 +104,7 @@ public class GameWorld implements World{
                 }
             }
         }
-        return true;
+        return !gameOver;
     }
 
     @Override 
