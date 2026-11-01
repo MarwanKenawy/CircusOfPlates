@@ -11,6 +11,7 @@ import eg.edu.alexu.csd.oop.circus.model.objects.Clown;
 import eg.edu.alexu.csd.oop.circus.model.objects.FallingObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Plate;
 import eg.edu.alexu.csd.oop.circus.model.objects.Shape;
+import eg.edu.alexu.csd.oop.circus.model.objects.ShapeStack;
 
 public class GameWorld implements World{
     private static final int STACK_OFFSET = 10;
@@ -19,6 +20,7 @@ public class GameWorld implements World{
     private final int width; 
     private final int height;
     private int refreshCount = 0;
+    private int score = 0;
 
     
     private final List<GameObject> constantObjects;
@@ -94,7 +96,7 @@ public class GameWorld implements World{
 
     @Override 
     public String getStatus(){
-        return "Circus of Plates | Score : 0";
+        return "Score: " + score;
     }
     
     @Override 
@@ -125,6 +127,7 @@ public class GameWorld implements World{
 
         positionShapeOnStack(shape, isLeftStack);
         controllableObjects.add(shape);
+        checkForMatch(isLeftStack);
     }
 
     private void positionShapeOnStack(Shape shape, boolean leftStack){
@@ -157,5 +160,21 @@ public class GameWorld implements World{
         Color color = colors[(int)(Math.random() * colors.length)];
         int x = (int)(Math.random() * (width - 60));
         movableObjects.add(new Plate(x, 0, color, 2));
+    }
+
+    private void checkForMatch(boolean leftStack){
+        ShapeStack stack;
+
+        if(leftStack){
+            stack = clown.getLeftStack();
+        }else{
+            stack = clown.getRightStack();
+        }
+
+        if(stack.hasThreeMatchingColors()){
+            List<Shape> removedShapes = stack.removeTopThree();
+            controllableObjects.removeAll(removedShapes);
+            score++;
+        }
     }
 }

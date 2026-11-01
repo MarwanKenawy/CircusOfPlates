@@ -39,4 +39,32 @@ public class ShapeStack {
     public boolean isEmpty(){
         return shapes.isEmpty();
     }
+
+    public boolean hasThreeMatchingColors(){
+        if(shapes.size() < 3){
+            return false;
+        }
+
+        int size = shapes.size();
+
+        Shape first = shapes.get(size - 1);
+        Shape second = shapes.get(size - 2);
+        Shape third = shapes.get(size - 3);
+
+        return first.getColor().equals(second.getColor()) && second.getColor().equals(third.getColor());
+    }
+
+    public List<Shape> removeTopThree(){
+        List<Shape> removed = new ArrayList<>();
+
+        if(!hasThreeMatchingColors()){
+            return removed;
+        }
+
+        removed.add(pop());
+        removed.add(pop());
+        removed.add(pop());
+
+        return removed;
+    }
 }
