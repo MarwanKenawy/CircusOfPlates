@@ -35,7 +35,7 @@ public class Clown extends AbstractGameObject {
         g.setColor(Color.BLUE);
         g.fillRect(20, 45, 40, 45);
 
-        g.setColor(Color.BLACK);
+        g.setColor(Color.YELLOW);
         g.fillRect(25, 90, 10, 10);
         g.fillRect(45, 90, 10, 10);
 

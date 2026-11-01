@@ -7,6 +7,7 @@ import java.util.List;
 import eg.edu.alexu.csd.oop.game.GameObject;
 import eg.edu.alexu.csd.oop.game.World;
 import eg.edu.alexu.csd.oop.circus.factory.ShapeFactory;
+import eg.edu.alexu.csd.oop.circus.model.objects.Bomb;
 // import eg.edu.alexu.csd.oop.circus.model.objects.TestObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Clown;
 import eg.edu.alexu.csd.oop.circus.model.objects.FallingObject;
@@ -75,6 +76,9 @@ public class GameWorld implements World{
         refreshCount++;
         if(refreshCount % SPAWN_INTERVAL == 0){
             spawnShape();
+        }
+        if(refreshCount % 300 == 0){
+            spawnBomb();
         }
         for(int i = movableObjects.size() - 1; i >= 0; i--){
             GameObject object = movableObjects.get(i);
@@ -192,5 +196,10 @@ public class GameWorld implements World{
             controllableObjects.removeAll(removedShapes);
             score++;
         }
+    }
+
+    private void spawnBomb(){
+        int x = (int)(Math.random() * (width - 35));
+        movableObjects.add(new Bomb(x, 0, 2));
     }
 }
