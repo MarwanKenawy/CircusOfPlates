@@ -14,9 +14,11 @@ import eg.edu.alexu.csd.oop.circus.model.objects.Shape;
 
 public class GameWorld implements World{
     private static final int STACK_OFFSET = 10;
+    private static final int SPAWN_INTERVAL = 100;
 
     private final int width; 
     private final int height;
+    private int refreshCount = 0;
 
     
     private final List<GameObject> constantObjects;
@@ -36,7 +38,7 @@ public class GameWorld implements World{
         // constantObjects.add(new TestObject(350, 250));
         clown = new Clown(width / 2 - 40, height - 120);
         controllableObjects.add(clown);
-        movableObjects.add(new Plate(width / 2 - 30, 0, Color.RED, 2));
+        // movableObjects.add(new Plate(width / 2 - 30, 0, Color.RED, 2));
     }
 
     @Override 
@@ -67,6 +69,10 @@ public class GameWorld implements World{
     @Override 
     public boolean refresh(){
         updateStackPositions();
+        refreshCount++;
+        if(refreshCount % SPAWN_INTERVAL == 0){
+            spawnPlate();
+        }
         for(int i = movableObjects.size() - 1; i >= 0; i--){
             GameObject object = movableObjects.get(i);
             if(object instanceof FallingObject){
@@ -144,5 +150,12 @@ public class GameWorld implements World{
             shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
             shape.setY(clown.getY() - ((i + 1) * shape.getHeight()));
         }
+    }
+
+    private void spawnPlate(){
+        Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
+        Color color = colors[(int)(Math.random() * colors.length)];
+        int x = (int)(Math.random() * (width - 60));
+        movableObjects.add(new Plate(x, 0, color, 2));
     }
 }
