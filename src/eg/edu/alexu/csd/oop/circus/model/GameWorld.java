@@ -10,12 +10,12 @@ import eg.edu.alexu.csd.oop.circus.factory.ShapeFactory;
 // import eg.edu.alexu.csd.oop.circus.model.objects.TestObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Clown;
 import eg.edu.alexu.csd.oop.circus.model.objects.FallingObject;
-import eg.edu.alexu.csd.oop.circus.model.objects.Plate;
 import eg.edu.alexu.csd.oop.circus.model.objects.Shape;
 import eg.edu.alexu.csd.oop.circus.model.objects.ShapeStack;
 
 public class GameWorld implements World{
     private static final int STACK_OFFSET = 10;
+    private static final int STACK_SPACING = 25;
     private static final int SPAWN_INTERVAL = 100;
 
     private final int width; 
@@ -75,7 +75,7 @@ public class GameWorld implements World{
         updateStackPositions();
         refreshCount++;
         if(refreshCount % SPAWN_INTERVAL == 0){
-            spawnPlate();
+            spawnShape();
         }
         for(int i = movableObjects.size() - 1; i >= 0; i--){
             GameObject object = movableObjects.get(i);
@@ -141,27 +141,27 @@ public class GameWorld implements World{
             stackSize = clown.getRightStack().size();
             shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
         }
-        shape.setY(clown.getY() - (stackSize * shape.getHeight()));
+        shape.setY(clown.getY() - (stackSize * STACK_SPACING));
     }
 
     private void updateStackPositions(){
         for(int i = 0; i < clown.getLeftStack().size(); i++){
             Shape shape = clown.getLeftStack().get(i);
             shape.setX(clown.getX() - shape.getWidth() + STACK_OFFSET);
-            shape.setY(clown.getY() - ((i + 1) * shape.getHeight()));
+            shape.setY(clown.getY() - ((i + 1) * STACK_SPACING));
         }
         for(int i = 0; i < clown.getRightStack().size(); i++){
             Shape shape = clown.getRightStack().get(i);
             shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
-            shape.setY(clown.getY() - ((i + 1) * shape.getHeight()));
+            shape.setY(clown.getY() - ((i + 1) * STACK_SPACING));
         }
     }
 
-    private void spawnPlate(){
+    private void spawnShape(){
         Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
         Color color = colors[(int)(Math.random() * colors.length)];
         int x = (int)(Math.random() * (width - 60));
-        movableObjects.add(shapeFactory.createPlate(x, 0, color, 2));
+        movableObjects.add(shapeFactory.createRandomShape(x, 0, color, 2));
     }
 
     private void checkForMatch(boolean leftStack){
