@@ -15,12 +15,14 @@ import eg.edu.alexu.csd.oop.circus.model.objects.Shape;
 import eg.edu.alexu.csd.oop.circus.model.objects.ShapeStack;
 
 public class GameWorld implements World{
+    private static final long MAX_TIME = 60 * 1000;
     private static final int STACK_OFFSET = 10;
     private static final int SPAWN_INTERVAL = 100;
 
     private final int width; 
     private final int height;
     private final ShapeFactory shapeFactory = new ShapeFactory();
+    private final long startTime;
     private int refreshCount = 0;
     private int score = 0;
     private boolean gameOver = false;
@@ -35,6 +37,7 @@ public class GameWorld implements World{
     public GameWorld(int width, int height){
         this.width = width;
         this.height = height;
+        this.startTime = System.currentTimeMillis();
 
         constantObjects = new ArrayList<>();
         movableObjects = new ArrayList<>();
@@ -76,6 +79,10 @@ public class GameWorld implements World{
         if(gameOver){
             return false;
         }
+        if(System.currentTimeMillis() - startTime >= MAX_TIME){
+            gameOver = true;
+            return false;
+        }
         updateStackPositions();
         refreshCount++;
         if(refreshCount % SPAWN_INTERVAL == 0){
@@ -109,7 +116,9 @@ public class GameWorld implements World{
 
     @Override 
     public String getStatus(){
-        return "Score: " + score;
+        long elapsedTime = System.currentTimeMillis() - startTime;
+        long remainingTime = Math.max(0, MAX_TIME - elapsedTime);
+        return "Score: " + score + " | Time: " + remainingTime / 1000 + "s";
     }
     
     @Override 
