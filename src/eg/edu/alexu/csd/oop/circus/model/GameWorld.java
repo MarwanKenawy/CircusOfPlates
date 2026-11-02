@@ -12,15 +12,18 @@ import eg.edu.alexu.csd.oop.circus.model.objects.Clown;
 import eg.edu.alexu.csd.oop.circus.model.objects.FallingObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Shape;
 import eg.edu.alexu.csd.oop.circus.model.objects.ShapeStack;
+import eg.edu.alexu.csd.oop.circus.strategy.DifficultyStrategy;
+import eg.edu.alexu.csd.oop.circus.strategy.MediumDifficulty;
 
 public class GameWorld implements World{
     private static final long MAX_TIME = 60 * 1000;
     private static final int STACK_OFFSET = 10;
-    private static final int SPAWN_INTERVAL = 100;
+    // private static final int SPAWN_INTERVAL = 100;
 
     private final int width; 
     private final int height;
     private final FallingObjectFactory objectFactory = new FallingObjectFactory();
+    private final DifficultyStrategy difficulty;
     private final long startTime;
     private int refreshCount = 0;
     private int score = 0;
@@ -37,6 +40,8 @@ public class GameWorld implements World{
         this.width = width;
         this.height = height;
         this.startTime = System.currentTimeMillis();
+
+        difficulty = new MediumDifficulty();
 
         constantObjects = new ArrayList<>();
         movableObjects = new ArrayList<>();
@@ -84,7 +89,7 @@ public class GameWorld implements World{
         }
         updateStackPositions();
         refreshCount++;
-        if(refreshCount % SPAWN_INTERVAL == 0){
+        if(refreshCount % difficulty.getSpawnInterval() == 0){
             spawnObject();
         }
         for(int i = movableObjects.size() - 1; i >= 0; i--){
@@ -218,6 +223,6 @@ public class GameWorld implements World{
 
     private void spawnObject(){
         int x = (int)(Math.random() * (width - 60));
-        movableObjects.add(objectFactory.createRandomObject(x, 0, 2));
+        movableObjects.add(objectFactory.createRandomObject(x, 0, difficulty.getFallSpeed()));
     }
 }
