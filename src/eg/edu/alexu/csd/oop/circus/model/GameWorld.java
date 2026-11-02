@@ -1,12 +1,11 @@
 package eg.edu.alexu.csd.oop.circus.model;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
 import eg.edu.alexu.csd.oop.game.GameObject;
 import eg.edu.alexu.csd.oop.game.World;
-import eg.edu.alexu.csd.oop.circus.factory.ShapeFactory;
+import eg.edu.alexu.csd.oop.circus.factory.FallingObjectFactory;
 import eg.edu.alexu.csd.oop.circus.model.objects.Bomb;
 // import eg.edu.alexu.csd.oop.circus.model.objects.TestObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Clown;
@@ -21,7 +20,7 @@ public class GameWorld implements World{
 
     private final int width; 
     private final int height;
-    private final ShapeFactory shapeFactory = new ShapeFactory();
+    private final FallingObjectFactory objectFactory = new FallingObjectFactory();
     private final long startTime;
     private int refreshCount = 0;
     private int score = 0;
@@ -86,10 +85,7 @@ public class GameWorld implements World{
         updateStackPositions();
         refreshCount++;
         if(refreshCount % SPAWN_INTERVAL == 0){
-            spawnShape();
-        }
-        if(refreshCount % 300 == 0){
-            spawnBomb();
+            spawnObject();
         }
         for(int i = movableObjects.size() - 1; i >= 0; i--){
             GameObject object = movableObjects.get(i);
@@ -192,12 +188,12 @@ public class GameWorld implements World{
         }
     }
 
-    private void spawnShape(){
-        Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
-        Color color = colors[(int)(Math.random() * colors.length)];
-        int x = (int)(Math.random() * (width - 60));
-        movableObjects.add(shapeFactory.createRandomShape(x, 0, color, 2));
-    }
+    // private void spawnShape(){
+    //     Color[] colors = {Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW};
+    //     Color color = colors[(int)(Math.random() * colors.length)];
+    //     int x = (int)(Math.random() * (width - 60));
+    //     movableObjects.add(shapeFactory.createRandomShape(x, 0, color, 2));
+    // }
 
     private void checkForMatch(boolean leftStack){
         ShapeStack stack;
@@ -215,8 +211,13 @@ public class GameWorld implements World{
         }
     }
 
-    private void spawnBomb(){
-        int x = (int)(Math.random() * (width - 35));
-        movableObjects.add(new Bomb(x, 0, 2));
+    // private void spawnBomb(){
+    //     int x = (int)(Math.random() * (width - 35));
+    //     movableObjects.add(new Bomb(x, 0, 2));
+    // }
+
+    private void spawnObject(){
+        int x = (int)(Math.random() * (width - 60));
+        movableObjects.add(objectFactory.createRandomObject(x, 0, 2));
     }
 }
