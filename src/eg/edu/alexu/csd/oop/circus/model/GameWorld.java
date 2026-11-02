@@ -36,12 +36,12 @@ public class GameWorld implements World{
 
     private final Clown clown;
 
-    public GameWorld(int width, int height){
+    public GameWorld(int width, int height, DifficultyStrategy difficulty){
         this.width = width;
         this.height = height;
         this.startTime = System.currentTimeMillis();
 
-        difficulty = new MediumDifficulty();
+        this.difficulty = difficulty;
 
         constantObjects = new ArrayList<>();
         movableObjects = new ArrayList<>();
@@ -83,15 +83,18 @@ public class GameWorld implements World{
         if(gameOver){
             return false;
         }
+
         if(System.currentTimeMillis() - startTime >= MAX_TIME){
             gameOver = true;
             return false;
         }
+
         updateStackPositions();
         refreshCount++;
         if(refreshCount % difficulty.getSpawnInterval() == 0){
             spawnObject();
         }
+        
         for(int i = movableObjects.size() - 1; i >= 0; i--){
             GameObject object = movableObjects.get(i);
             if(object instanceof FallingObject){
