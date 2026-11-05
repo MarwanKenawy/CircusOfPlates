@@ -13,7 +13,6 @@ import eg.edu.alexu.csd.oop.circus.model.objects.FallingObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Shape;
 import eg.edu.alexu.csd.oop.circus.model.objects.ShapeStack;
 import eg.edu.alexu.csd.oop.circus.strategy.DifficultyStrategy;
-import eg.edu.alexu.csd.oop.circus.strategy.MediumDifficulty;
 
 public class GameWorld implements World{
     private static final long MAX_TIME = 60 * 1000;
