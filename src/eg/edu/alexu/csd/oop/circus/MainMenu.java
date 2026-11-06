@@ -7,6 +7,7 @@ import java.awt.Font;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import eg.edu.alexu.csd.oop.circus.model.GameWorld;
 import eg.edu.alexu.csd.oop.circus.strategy.DifficultyStrategy;
@@ -36,18 +37,22 @@ public class MainMenu {
         JButton easyButton = createButton("Easy", GREEN);
         JButton mediumButton = createButton("Medium", BLUE);
         JButton hardButton = createButton("Hard", RED);
+        JButton howToPlayButton = createButton("How To Play", new Color(150, 90, 180));
 
         easyButton.setBounds(500, 270, 230, 55);
         mediumButton.setBounds(500, 345, 230, 55);
         hardButton.setBounds(500, 420, 230, 55);
+        howToPlayButton.setBounds(500, 495, 230, 55);
 
         easyButton.addActionListener(e -> startGame(new EasyDifficulty(), frame));
         mediumButton.addActionListener(e -> startGame(new MediumDifficulty(), frame));
         hardButton.addActionListener(e -> startGame(new HardDifficulty(), frame));
+        howToPlayButton.addActionListener(e -> showInstructions(frame));
 
         panel.add(easyButton);
         panel.add(mediumButton);
         panel.add(hardButton);
+        panel.add(howToPlayButton);
 
         frame.setContentPane(panel);
         frame.pack();
@@ -85,5 +90,23 @@ public class MainMenu {
         });
 
         return button;
+    }
+
+    private void showInstructions(JFrame parent){
+        String instructions = 
+        "<html><div style='width: 300px; text-align: center;'>"
+        + "<h1>CIRCUS OF PLATES</h1>"
+        + "<h2>How to Play</h2>"
+        + "<p><b>Objective:</b> Catch falling shapes and earn points!</p>"
+        + "<p><b>Movement:</b> Use the LEFT and RIGHT arrow keys "
+        + "to move the clown.</p>"
+        + "<p><b>Matching:</b> Collect three shapes of the same "
+        + "color to score points.</p>"
+        + "<p><b>Watch Out!</b> Avoid falling bombs!</p>"
+        + "<p><b>Time:</b> You have 60 seconds to achieve "
+        + "the highest score possible.</p>"
+        + "</div></html>";
+
+        JOptionPane.showMessageDialog(parent, instructions, "How to Play", JOptionPane.INFORMATION_MESSAGE);
     }
 }
