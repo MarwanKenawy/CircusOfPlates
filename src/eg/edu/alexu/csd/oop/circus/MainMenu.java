@@ -1,19 +1,12 @@
 package eg.edu.alexu.csd.oop.circus;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import eg.edu.alexu.csd.oop.circus.model.GameWorld;
 import eg.edu.alexu.csd.oop.circus.strategy.DifficultyStrategy;
@@ -35,32 +28,10 @@ public class MainMenu {
     public MainMenu(){
         JFrame frame = new JFrame("Circus of Plates");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // frame.setSize(500, 450);
-        // frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
         CircusMenuPanel panel = new CircusMenuPanel();
         panel.setLayout(null);
-
-        // JPanel panel = new JPanel();
-        // panel.setBackground(PURPLE);
-        // panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        // panel.setBorder(new EmptyBorder(35, 50, 35, 50));
-
-        // JLabel title = new JLabel("CIRCUS OF PLATES");
-        // title.setFont(new Font("Serif", Font.BOLD, 34));
-        // title.setForeground(GOLD);
-        // title.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // JLabel subtitle = new JLabel("Choose Your Difficulty");
-        // subtitle.setFont(new Font("SansSerif", Font.BOLD, 18));
-        // subtitle.setBackground(Color.WHITE);
-        // subtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // panel.add(title);
-        // panel.add(Box.createVerticalStrut(15));
-        // panel.add(subtitle);
-        // panel.add(Box.createVerticalStrut(35));
 
         JButton easyButton = createButton("Easy", GREEN);
         JButton mediumButton = createButton("Medium", BLUE);
@@ -75,21 +46,18 @@ public class MainMenu {
         hardButton.addActionListener(e -> startGame(new HardDifficulty(), frame));
 
         panel.add(easyButton);
-        // panel.add(Box.createVerticalStrut(15));
         panel.add(mediumButton);
-        // panel.add(Box.createVerticalStrut(15));
         panel.add(hardButton);
 
         frame.setContentPane(panel);
         frame.pack();
         frame.setLocationRelativeTo(null);
-        // frame.add(panel);
         frame.setVisible(true);
     }
 
     private void startGame(DifficultyStrategy difficulty, JFrame frame){
         frame.dispose();
-        
+
         GameWorld world = new GameWorld(WIDTH, HEIGHT, difficulty);
         GameEngine.start("Circus of Plates", world, Color.BLACK);
     }
@@ -97,15 +65,24 @@ public class MainMenu {
     private JButton createButton(String text, Color color){
         JButton button = new JButton(text);
         button.setFont(new Font("Serif", Font.BOLD, 24));
-        button.setBackground(Color.WHITE);
-        button.setForeground(color);
+        button.setForeground(Color.WHITE);
+        button.setBackground(color);
         button.setOpaque(true);
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createLineBorder(new Color(255, 205, 65), 3));
-        // button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        // button.setMaximumSize(new Dimension(300, 55));
-        // button.setPreferredSize(new Dimension(300, 55));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        button.addMouseListener(new java.awt.event.MouseAdapter(){
+            @Override 
+            public void mouseEntered(java.awt.event.MouseEvent e){
+                button.setBackground(color.brighter());
+            }
+
+            @Override 
+            public void mouseExited(java.awt.event.MouseEvent e){
+                button.setBackground(color);
+            }
+        });
 
         return button;
     }
