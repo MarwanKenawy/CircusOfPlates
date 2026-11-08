@@ -27,6 +27,7 @@ public class GameWorld implements World{
     private int refreshCount = 0;
     private int score = 0;
     private boolean gameOver = false;
+    private String gameOverReason = "";
 
     
     private final List<GameObject> constantObjects;
@@ -85,6 +86,7 @@ public class GameWorld implements World{
 
         if(System.currentTimeMillis() - startTime >= MAX_TIME){
             gameOver = true;
+            gameOverReason = "TIME'S UP!";
             return false;
         }
 
@@ -101,6 +103,7 @@ public class GameWorld implements World{
                 fallingObject.fall();
                 if(fallingObject instanceof Bomb && intersects(fallingObject, clown)){
                     gameOver = true;
+                    gameOverReason = "YOU HIT A BOMB!";
                     return false;
                 }
                 if(fallingObject instanceof Shape && intersects(fallingObject, clown)){
@@ -226,5 +229,17 @@ public class GameWorld implements World{
     private void spawnObject(){
         int x = (int)(Math.random() * (width - 60));
         movableObjects.add(objectFactory.createRandomObject(x, 0, difficulty.getFallSpeed()));
+    }
+
+    public int getScore(){
+        return score;
+    }
+
+    public boolean isGameOver(){
+        return gameOver;
+    }
+
+    public String getGameOverReason(){
+        return gameOverReason;
     }
 }

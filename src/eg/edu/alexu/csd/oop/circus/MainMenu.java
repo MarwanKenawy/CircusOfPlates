@@ -3,11 +3,12 @@ package eg.edu.alexu.csd.oop.circus;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.Window;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 import eg.edu.alexu.csd.oop.circus.model.GameWorld;
 import eg.edu.alexu.csd.oop.circus.strategy.DifficultyStrategy;
@@ -15,6 +16,7 @@ import eg.edu.alexu.csd.oop.circus.strategy.EasyDifficulty;
 import eg.edu.alexu.csd.oop.circus.strategy.HardDifficulty;
 import eg.edu.alexu.csd.oop.circus.strategy.MediumDifficulty;
 import eg.edu.alexu.csd.oop.game.GameEngine;
+import eg.edu.alexu.csd.oop.game.GameEngine.GameController;;
 
 public class MainMenu {
     private static final int WIDTH = 800;
@@ -40,9 +42,31 @@ public class MainMenu {
 
     private void startGame(DifficultyStrategy difficulty, JFrame frame){
         frame.dispose();
+        launchGame(difficulty);
 
+    }
+    
+    private void launchGame(DifficultyStrategy difficulty){
         GameWorld world = new GameWorld(WIDTH, HEIGHT, difficulty);
-        GameEngine.start("Circus of Plates", world, Color.BLACK);
+        GameController controller = GameEngine.start("Circus of Plates", world, Color.BLACK);
+
+        Timer gameOverTimer = new Timer(100, e -> {
+            if(world.isGameOver()){
+                ((Timer)e.getSource()).stop();
+
+                controller.pause();
+
+                for(Window window : Window.getWindows()){
+                    if(window instanceof JFrame && ((JFrame)window).getTitle().equals("Circus of Plates")){
+                        window.dispose();
+                    }
+                }
+
+                GameOverFrame gameOverFrame = new GameOverFrame(world.getScore(), world.getGameOverReason(), () -> launchGame(difficulty), () -> new MainMenu());
+                gameOverFrame.setVisible(true);
+            }
+        });
+        gameOverTimer.start();
     }
 
     private JButton createButton(String text, Color color){
