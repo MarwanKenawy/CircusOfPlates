@@ -38,9 +38,29 @@ public class GameOverFrame extends JFrame {
                 g2.setColor(Color.WHITE);
                 g2.drawString(reason, 190, 210);
 
-                g2.setFont(new Font("Serif", Font.BOLD, 35));
+                int panelX = 200;
+                int panelY = 250;
+                int panelWidth = 400;
+                int panelHeight = 110;
+
+                g2.setColor(new Color(120, 65, 20));
+                g2.fillRoundRect(panelX - 6, panelY - 6, panelWidth + 12, panelHeight + 12, 30, 30);
+                
                 g2.setColor(GOLD);
-                g2.drawString("Final Score: " + score, 245, 300);
+                g2.fillRoundRect(panelX, panelY, panelWidth, panelHeight, 25, 25);
+
+                g2.setColor(new Color(75, 25, 65));
+                g2.fillRoundRect(panelX + 7, panelY + 7, panelWidth - 14, panelHeight - 14, 20, 20);
+
+                g2.setFont(new Font("Serif", Font.BOLD, 25));
+                g2.setColor(GOLD);
+                g2.drawString("YOUR FINAL SCORE", 290, 290);
+
+                g2.setFont(new Font("Serif", Font.BOLD, 42));
+                g2.setColor(Color.WHITE);
+                String scoreText = String.valueOf(score);
+                int scoreWidth = g2.getFontMetrics().stringWidth(scoreText);
+                g2.drawString(scoreText, 400 - scoreWidth / 2, 340);
 
                 g2.dispose();
             }
@@ -78,6 +98,18 @@ public class GameOverFrame extends JFrame {
         button.setFocusPainted(false);
         button.setOpaque(true);
         button.setBorderPainted(false);
+
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override 
+            public void mouseEntered(java.awt.event.MouseEvent e){
+                button.setBackground(color.brighter());
+            }
+
+            @Override 
+            public void mouseExited(java.awt.event.MouseEvent e){
+                button.setBackground(color);
+            }
+        });
 
         return button;
     }
