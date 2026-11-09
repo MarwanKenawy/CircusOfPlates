@@ -31,8 +31,23 @@ public class GameOverFrame extends JFrame {
                 g2.fillRect(0, 0, getWidth(), getHeight());
 
                 g2.setFont(new Font("Serif", Font.BOLD, 58));
+                String title = "GAME OVER";
+
+                int titleWidth = g2.getFontMetrics().stringWidth(title);
+                int titleX = (800 - titleWidth) / 2;
+
+                g2.setColor(new Color(60, 20, 20));
+                g2.drawString(title, titleX + 4, 134);
+
                 g2.setColor(GOLD);
-                g2.drawString("GAME OVER", 190, 130);
+                g2.drawString(title, titleX, 130);
+
+                g2.setFont(new Font("Serif", Font.BOLD, 45));
+
+                int starOffset = titleWidth / 2 + 45;
+
+                g2.drawString("★", 400 - starOffset, 135);
+                g2.drawString("★", 400 + starOffset - 40, 135);
 
                 g2.setFont(new Font("Serif", Font.BOLD, 25));
                 g2.setColor(Color.WHITE);
@@ -62,6 +77,14 @@ public class GameOverFrame extends JFrame {
                 int scoreWidth = g2.getFontMetrics().stringWidth(scoreText);
                 g2.drawString(scoreText, 400 - scoreWidth / 2, 340);
 
+                g2.setFont(new Font("Serif", Font.ITALIC, 23));
+                g2.setColor(Color.WHITE);
+
+                String message = "Better luck next time!";
+                int messageWidth = g2.getFontMetrics().stringWidth(message);
+
+                g2.drawString(message, (800 - messageWidth) / 2, 390);
+
                 g2.dispose();
             }
         };
@@ -69,8 +92,8 @@ public class GameOverFrame extends JFrame {
         JButton playAgainButton = createButton("Play Again", RED);
         JButton mainMenuButton = createButton("Main Menu", BLUE);
 
-        playAgainButton.setBounds(200, 390, 180, 55);
-        mainMenuButton.setBounds(420, 390, 180, 55);
+        playAgainButton.setBounds(200, 410, 180, 55);
+        mainMenuButton.setBounds(420, 410, 180, 55);
 
         playAgainButton.addActionListener(e -> {
             dispose();
@@ -97,7 +120,8 @@ public class GameOverFrame extends JFrame {
         button.setBackground(color);
         button.setFocusPainted(false);
         button.setOpaque(true);
-        button.setBorderPainted(false);
+        button.setBorder(javax.swing.BorderFactory.createLineBorder(GOLD, 3));
+        button.setBorderPainted(true);
 
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override 
