@@ -3,10 +3,14 @@ package eg.edu.alexu.csd.oop.circus.model.objects;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class Clown extends AbstractGameObject {
-    private static final int CLOWN_WIDTH = 80;
-    private static final int CLOWN_HEIGHT = 100;
+    private static final int CLOWN_WIDTH = 150;
+    private static final int CLOWN_HEIGHT = 176;
 
     private final ShapeStack leftStack;
     private final ShapeStack rightStack;
@@ -23,25 +27,17 @@ public class Clown extends AbstractGameObject {
     }
 
     private static BufferedImage[] createSprite(){
-        BufferedImage image = new BufferedImage(CLOWN_WIDTH, CLOWN_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = image.createGraphics();
+        try{
+            BufferedImage original = ImageIO.read(new File("resources/images/game/clown_with_sticks.png"));
+            BufferedImage image = new BufferedImage(CLOWN_WIDTH, CLOWN_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
-        g.setColor(Color.PINK);
-        g.fillOval(20, 5, 40, 40);
-
-        g.setColor(Color.RED);
-        g.fillRect(20, 0, 40, 10);
-
-        g.setColor(Color.BLUE);
-        g.fillRect(20, 45, 40, 45);
-
-        g.setColor(Color.YELLOW);
-        g.fillRect(25, 90, 10, 10);
-        g.fillRect(45, 90, 10, 10);
-
-        g.dispose();
-
-        return new BufferedImage[] {image};
+            Graphics2D g = image.createGraphics();
+            g.drawImage(original, 0, 0, CLOWN_WIDTH, CLOWN_HEIGHT, null);
+            g.dispose();
+            return new BufferedImage[] {image};
+        }catch(IOException e){
+            throw new RuntimeException("Could not load clown image!", e);
+        }
     }
 
     public ShapeStack getLeftStack(){

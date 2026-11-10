@@ -6,6 +6,7 @@ import java.util.List;
 import eg.edu.alexu.csd.oop.game.GameObject;
 import eg.edu.alexu.csd.oop.game.World;
 import eg.edu.alexu.csd.oop.circus.factory.FallingObjectFactory;
+import eg.edu.alexu.csd.oop.circus.model.objects.Background;
 import eg.edu.alexu.csd.oop.circus.model.objects.Bomb;
 // import eg.edu.alexu.csd.oop.circus.model.objects.TestObject;
 import eg.edu.alexu.csd.oop.circus.model.objects.Clown;
@@ -16,8 +17,10 @@ import eg.edu.alexu.csd.oop.circus.strategy.DifficultyStrategy;
 
 public class GameWorld implements World{
     private static final long MAX_TIME = 60 * 1000;
-    private static final int STACK_OFFSET = 10;
+    // private static final int STACK_OFFSET = 10;
     // private static final int SPAWN_INTERVAL = 100;
+    private static final int LEFT_STICK_CENTER = 0;
+    private static final int RIGHT_STICK_CENTER = 150;
 
     private final int width; 
     private final int height;
@@ -47,8 +50,9 @@ public class GameWorld implements World{
         movableObjects = new ArrayList<>();
         controllableObjects = new ArrayList<>();
 
-        // constantObjects.add(new TestObject(350, 250));
-        clown = new Clown(width / 2 - 40, height - 120);
+        constantObjects.add(new Background(width, height));
+        
+        clown = new Clown(width / 2 - 75, height - 190);
         controllableObjects.add(clown);
         // movableObjects.add(new Plate(width / 2 - 30, 0, Color.RED, 2));
     }
@@ -160,9 +164,9 @@ public class GameWorld implements World{
 
     private void positionShapeOnStack(Shape shape, boolean leftStack){
         if(leftStack){
-            shape.setX(clown.getX() - shape.getWidth() + STACK_OFFSET);
+            shape.setX(clown.getX() + LEFT_STICK_CENTER - shape.getWidth() / 2);
         }else{
-            shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
+            shape.setX(clown.getX() + RIGHT_STICK_CENTER -  shape.getWidth() / 2);
         }
         shape.setY(clown.getY() - shape.getHeight());
     }
@@ -189,9 +193,9 @@ public class GameWorld implements World{
             currentY -= shape.getHeight();
 
             if(leftStack){
-                shape.setX(clown.getX() - shape.getWidth() + STACK_OFFSET);
+                shape.setX(clown.getX() + LEFT_STICK_CENTER - shape.getWidth() / 2);
             }else{
-                shape.setX(clown.getX() + shape.getWidth() - STACK_OFFSET);
+                shape.setX(clown.getX() + RIGHT_STICK_CENTER - shape.getWidth() / 2);
             }
 
             shape.setY(currentY);
