@@ -20,6 +20,7 @@ public class Ring extends Shape {
 
     private static BufferedImage[] createSprite(Color color){
         String imagePath = "";
+        boolean newColor = false;
 
         if(color.equals(Color.RED)){
             imagePath = "resources/images/game/ring_red2.png";
@@ -29,6 +30,9 @@ public class Ring extends Shape {
             imagePath = "resources/images/game/ring_green2.png";
         }else if(color.equals(Color.YELLOW)){
             imagePath = "resources/images/game/ring_yellow2.png";
+        }else{
+            imagePath = "resources/images/game/ring_red2.png";
+            newColor = true;
         }
 
         try {
@@ -40,6 +44,31 @@ public class Ring extends Shape {
             g.drawImage(original, 0, 0, RING_WIDTH, RING_HEIGHT, null);
 
             g.dispose();
+            if(newColor){
+                for(int x = 0; x < image.getWidth(); x++){
+                    for(int y = 0; y < image.getHeight(); y++){
+                        Color pixel = new Color(image.getRGB(x, y), true);
+                        if(pixel.getAlpha() == 0){
+                            continue;
+                        }
+
+                        float brightness = Math.max(pixel.getRed(), Math.max(pixel.getGreen(), pixel.getBlue())) / 255.0f;
+                        int red = Math.min(255, Math.round(color.getRed() * brightness));
+                        int green = Math.min(255, Math.round(color.getGreen() * brightness));
+                        int blue = Math.min(255, Math.round(color.getBlue() * brightness));
+
+                        Color newPixel = new Color(
+                            red,
+                            green,
+                            blue,
+                            pixel.getAlpha()
+                        );
+
+                        image.setRGB(x, y, newPixel.getRGB());
+                    }
+                }    
+            }
+            
             return new BufferedImage[] {image};
         } catch (IOException e) {
             throw new RuntimeException("Could not load ring image: " + imagePath, e);
