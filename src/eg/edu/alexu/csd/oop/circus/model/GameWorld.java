@@ -168,7 +168,7 @@ public class GameWorld implements World{
         }else{
             shape.setX(clown.getX() + RIGHT_STICK_CENTER -  shape.getWidth() / 2);
         }
-        shape.setY(clown.getY() - shape.getHeight());
+        shape.setY(clown.getY() + 10 - shape.getHeight());
     }
 
     private void updateStackPositions(){
@@ -187,7 +187,7 @@ public class GameWorld implements World{
     }
 
     private void updateStack(ShapeStack stack, boolean leftStack){
-        int currentY = clown.getY();
+        int currentY = clown.getY() + 10;
         for(int i = 0; i < stack.size(); i++){
             Shape shape = stack.get(i);
             currentY -= shape.getHeight();
