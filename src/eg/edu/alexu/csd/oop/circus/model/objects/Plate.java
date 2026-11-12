@@ -19,8 +19,15 @@ public class Plate extends Shape {
     }
 
     private static BufferedImage[] createSprite(Color color){
+        String[] plateImages = {
+            "resources/images/game/plate_blue_front.png",
+            "resources/images/game/plate_blue_tilt_1.png",
+            "resources/images/game/plate_blue_tilt_2.png",
+            "resources/images/game/plate_blue_side.png"
+        };
+        String imagePath = plateImages[(int)(Math.random() * plateImages.length)];
         try{
-            BufferedImage original = ImageIO.read(new File("resources/images/game/plate_blue_front.png"));
+            BufferedImage original = ImageIO.read(new File(imagePath));
             BufferedImage image = new BufferedImage(PLATE_WIDTH, PLATE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = image.createGraphics();
 
@@ -52,7 +59,7 @@ public class Plate extends Shape {
             }
             return new BufferedImage[] {image};
         }catch(IOException e){
-            throw new RuntimeException("Could not load plate image!", e);
+            throw new RuntimeException("Could not load plate image: " + imagePath, e);
         }
         // BufferedImage image = new BufferedImage(PLATE_WIDTH, PLATE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
         // Graphics2D g = image.createGraphics();
