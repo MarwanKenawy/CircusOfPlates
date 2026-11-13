@@ -3,7 +3,10 @@ package eg.edu.alexu.csd.oop.circus;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Window;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -46,28 +49,108 @@ public class MainMenu {
 
     }
     
-    private void launchGame(DifficultyStrategy difficulty){
-        GameWorld world = new GameWorld(WIDTH, HEIGHT, difficulty);
-        GameController controller = GameEngine.start("Circus of Plates", world, Color.BLACK);
+    private void launchGame(DifficultyStrategy difficulty) {
+    GameWorld world = new GameWorld(WIDTH, HEIGHT, difficulty);
+    GameController controller = GameEngine.start("Circus of Plates", world, Color.BLACK);
 
-        Timer gameOverTimer = new Timer(100, e -> {
-            if(world.isGameOver()){
-                ((Timer)e.getSource()).stop();
+    final PauseMenuFrame[] pauseFrame = {null};
+    final boolean[] paused = {false};
+    final KeyEventDispatcher[] keyDispatcher = {null};
+    final Timer[] gameOverTimer = {null};
 
-                controller.pause();
+    Runnable cleanup = () -> {
+        if(keyDispatcher[0] != null){
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(keyDispatcher[0]);
+            keyDispatcher[0] = null;
+        }
 
-                for(Window window : Window.getWindows()){
-                    if(window instanceof JFrame && ((JFrame)window).getTitle().equals("Circus of Plates")){
-                        window.dispose();
-                    }
-                }
+        if(gameOverTimer[0] != null){
+            gameOverTimer[0].stop();
+            gameOverTimer[0] = null;
+        }
 
-                GameOverFrame gameOverFrame = new GameOverFrame(world.getScore(), world.getGameOverReason(), () -> launchGame(difficulty), () -> new MainMenu());
-                gameOverFrame.setVisible(true);
+        if(pauseFrame[0] != null){
+            pauseFrame[0].dispose();
+            pauseFrame[0] = null;
+        }
+    };
+
+    Runnable resumeGame = () -> {
+        if (pauseFrame[0] != null) {
+            pauseFrame[0].dispose();
+            pauseFrame[0] = null;
+        }
+
+        paused[0] = false;
+        world.resumeGame();
+        controller.resume();
+    };
+
+    Runnable restartGame = () -> {
+        cleanup.run();
+        controller.pause();
+        closeGameWindow();
+        launchGame(difficulty);
+    };
+
+    Runnable returnToMainMenu = () -> {
+        cleanup.run();
+        controller.pause();
+        closeGameWindow();
+        new MainMenu();
+    };
+
+    Runnable pauseGame = () -> {
+        if (paused[0] || world.isGameOver()) {
+            return;
+        }
+
+        paused[0] = true;
+        world.pauseGame();
+        controller.pause();
+
+        pauseFrame[0] = new PauseMenuFrame(resumeGame, restartGame, returnToMainMenu);
+
+        pauseFrame[0].setVisible(true);
+    };
+
+    keyDispatcher[0] = e -> {
+        if(e.getID() == KeyEvent.KEY_PRESSED && e.getKeyCode() == KeyEvent.VK_ESCAPE && !world.isGameOver()){
+            if (paused[0]) {
+                resumeGame.run();
+            }else{
+                pauseGame.run();
             }
-        });
-        gameOverTimer.start();
+            return true;
+        }
+        return false;
+    };
+
+    KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyDispatcher[0]);
+
+    gameOverTimer[0] = new Timer(100, e -> {
+        if(world.isGameOver()){
+            cleanup.run();
+
+            controller.pause();
+            closeGameWindow();
+
+            GameOverFrame gameOverFrame = new GameOverFrame(world.getScore(), world.getGameOverReason(), () -> launchGame(difficulty), () -> new MainMenu());
+            gameOverFrame.setVisible(true);
+        }
+    });
+
+    gameOverTimer[0].start();
+}
+
+private void closeGameWindow() {
+    for (Window window : Window.getWindows()) {
+        if (window instanceof JFrame
+                && ((JFrame) window).getTitle().equals("Circus of Plates")) {
+            window.dispose();
+        }
     }
+}
 
     private JButton createButton(String text, Color color){
         JButton button = new JButton(text);

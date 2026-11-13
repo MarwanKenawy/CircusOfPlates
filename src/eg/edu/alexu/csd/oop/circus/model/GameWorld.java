@@ -26,7 +26,10 @@ public class GameWorld implements World{
     private final int height;
     private final FallingObjectFactory objectFactory = new FallingObjectFactory();
     private final DifficultyStrategy difficulty;
-    private final long startTime;
+    private long startTime;
+    private long pausedTime = 0;
+    private long pauseStartTime = 0;
+    private boolean paused = false;
     private int refreshCount = 0;
     private int score = 0;
     private boolean gameOver = false;
@@ -88,7 +91,7 @@ public class GameWorld implements World{
             return false;
         }
 
-        if(System.currentTimeMillis() - startTime >= MAX_TIME){
+        if(getElapsedTime() >= MAX_TIME){
             gameOver = true;
             gameOverReason = "TIME'S UP!";
             return false;
@@ -126,8 +129,9 @@ public class GameWorld implements World{
 
     @Override 
     public String getStatus(){
-        long elapsedTime = System.currentTimeMillis() - startTime;
-        long remainingTime = Math.max(0, MAX_TIME - elapsedTime);
+        // long elapsedTime = System.currentTimeMillis() - startTime;
+        // long remainingTime = Math.max(0, MAX_TIME - elapsedTime);
+        long remainingTime = Math.max(0, MAX_TIME - getElapsedTime());
         return "Score: " + score + " | Time: " + remainingTime / 1000 + "s";
     }
     
@@ -245,5 +249,25 @@ public class GameWorld implements World{
 
     public String getGameOverReason(){
         return gameOverReason;
+    }
+    
+    public void pauseGame(){
+        if(!paused && !gameOver){
+            paused = true;
+            pauseStartTime = System.currentTimeMillis();
+        }
+    }
+
+    public void resumeGame(){
+        if(paused){
+            pausedTime += System.currentTimeMillis() - pauseStartTime;
+            paused = false;
+        }
+    }
+
+    private long getElapsedTime(){
+        long currentTime = paused ? pauseStartTime : System.currentTimeMillis();
+
+        return currentTime - startTime - pausedTime;
     }
 }
