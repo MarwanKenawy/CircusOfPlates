@@ -24,7 +24,7 @@ The game features multiple difficulty levels, colorful graphics, animated fallin
 | → Right Arrow | Move the clown right |
 | ESC | Pause / Resume the game |
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - **Java** – Main programming language.
 - **Java Swing & AWT** – Graphical user interface and game menus.
